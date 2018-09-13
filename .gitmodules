@@ -1,0 +1,3 @@
+[submodule "FrostBoard.UI"]
+	path = FrostBoard.UI
+	url = https://github.com/Gallimathias/FrostBoard.UI.git
