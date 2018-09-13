@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FrostLand.WebApi.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FrostLand.WebApi
 {
@@ -36,9 +37,16 @@ namespace FrostLand.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
-            
-            app.UseMvc();            
+            var options = new FileServerOptions()
+            {
+                EnableDefaultFiles = true,
+                RequestPath = ""
+            };
+
+            options.StaticFileOptions.ServeUnknownFileTypes = true;
+            app.UseFileServer(options);
+            app.UseAngularFallback(options);
+            app.UseMvc();
         }
     }
 }
