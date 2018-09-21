@@ -12,13 +12,15 @@ namespace FrostLand.WebApi.MiddleWares
     public class AngularFallbackMiddleware
     {
         private readonly FileServerOptions options;
+        private readonly RequestDelegate next;
 
         public AngularFallbackMiddleware(RequestDelegate next, FileServerOptions options)
         {
             this.options = options;
+            this.next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context)
         {
             if (!TryMatchPath(context, options.RequestPath, false, out PathString subpath) ||
                 !options.FileProvider.TryGetFileInfo(subpath.Value, out IFileInfo fileInfo))
