@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NonSucking.Framework.Extension.Generators": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\FrostLand.Web\\FrostLand.Web.csproj"
+    }
+  }
+}

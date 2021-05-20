@@ -10,7 +10,7 @@ namespace FrostLand.Model
 {
     public class RefListConverter : JsonConverter
     {
-        private Type collectionType;
+        private readonly Type collectionType;
 
         public RefListConverter()
         {
@@ -24,7 +24,7 @@ namespace FrostLand.Model
         public override bool CanConvert(Type objectType)
         {
             return typeof(ICollection).IsAssignableFrom(objectType) &&
-                objectType.GetProperties().Where(p => p.GetCustomAttributes<KeyAttribute>().Count() > 0).Count() > 0;
+                objectType.GetProperties().Where(p => p.GetCustomAttributes<KeyAttribute>().Any()).Any();
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -42,7 +42,7 @@ namespace FrostLand.Model
                 else
                     existingValue = Activator.CreateInstance(type);
 
-                if (type.GenericTypeArguments.Count() > 0)
+                if (type.GenericTypeArguments.Length > 0)
                     itemType = type.GenericTypeArguments[0];
 
             }
