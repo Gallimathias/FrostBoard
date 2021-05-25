@@ -30,9 +30,10 @@ namespace FrostLand.Web
             tokenProvider.LoadOrCreateKey();
 
             typeContainer.Register<ISessionTokenProvider>(tokenProvider);
-            typeContainer.Register(tokenProvider);
-            typeContainer.Register<AuthenticationController>(InstanceBehaviour.Instance);
+            typeContainer.Register(tokenProvider);            
             typeContainer.Register<IControllerActivator, CustomControllerActivator>(InstanceBehaviour.Singleton);
+
+            ControllerBuilder.Register(typeContainer);
         }
 
         public IConfiguration Configuration { get; }

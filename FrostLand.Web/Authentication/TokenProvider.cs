@@ -1,4 +1,5 @@
 ﻿using FrostLand.Core;
+using FrostLand.Web.Model;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,41 @@ namespace FrostLand.Web.Authentication
             Key = new SymmetricSecurityKey(key);
         }
 
+        public AuthResponse Login(string username, string password)
+        {
+            var result = sessionService.Login(username, password);
+            var token = Create(username, true, result);
+            return new()
+            {
+                Session = result,
+                Token = token.Token,
+                ExpireDate = token.ExpireDate
+            };
+        }
+        public AuthResponse GuestLogin()
+        {
+            var result = sessionService.GuestSession();
+            var token = Create("GUEST", false, result);
+            return new()
+            {
+                Session = result,
+                Token = token.Token,
+                ExpireDate = token.ExpireDate
+            };
+        }
+
+        public AuthResponse Refresh()
+        {
+            var result = sessionService.GuestSession();
+            var token = Create("GUEST", false, result);
+            return new()
+            {
+                Session = result,
+                Token = token.Token,
+                ExpireDate = token.ExpireDate
+            };
+        }
+
         public AuthToken Create(string username, bool isRegisterd, Guid session)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -77,7 +113,7 @@ namespace FrostLand.Web.Authentication
             return new AuthToken(strToken, token.ValidTo);
         }
 
-        private void GenerateNewKey(ref byte[] key, int offset, int count)
+        private static void GenerateNewKey(ref byte[] key, int offset, int count)
         {
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(key, offset, count);
@@ -90,7 +126,9 @@ namespace FrostLand.Web.Authentication
                 TokenValidationParameters validationParameters,
                 out SecurityToken validatedToken)
         {
-            return tokenHandler.ValidateToken(securityToken, validationParameters, out validatedToken);
+            var principal = tokenHandler.ValidateToken(securityToken, validationParameters, out validatedToken);
+
+            return principal;
         }
     }
 }

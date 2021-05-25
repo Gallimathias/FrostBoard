@@ -8,6 +8,7 @@ namespace FrostLand.Core
 {
     public interface IUserSessionService
     {
-        void Login(string username, string password);
+        Guid GuestSession();
+        Guid Login(string username, string password);
     }
 }

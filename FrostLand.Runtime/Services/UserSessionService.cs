@@ -14,13 +14,19 @@ namespace FrostLand.Runtime.Services
         {
         }
 
-        public void Login(string username, string password)
+        public Guid Login(string username, string password)
         {
+            return Guid.NewGuid();
         }
 
-        public void GuestSession()
+        public Guid GuestSession()
         {
+            return Guid.NewGuid();
+        }
 
+        public Guid Refresh()
+        {
+            return Guid.NewGuid();
         }
     }
 

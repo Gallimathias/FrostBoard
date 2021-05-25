@@ -27,12 +27,27 @@ namespace FrostLand.Web.Controllers
         public ActionResult Test() 
             => Ok();
 
+
+        [Route("[action]")]
+        [HttpGet]
+        public AuthResponse Refresh()
+            => Ok();
+
         [Route("login/user")]
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult LoginUser([FromBody] AuthRequest authentication)
+        public AuthResponse LoginUser([FromBody] AuthRequest authentication)
         {
             userSessionService.Login(authentication.Username, authentication.Password);
+            return Ok();
+        }
+
+        [Route("login/guest")]
+        [HttpGet]
+        [AllowAnonymous]
+        public AuthResponse LoginGuest()
+        {
+            userSessionService.GuestSession();
             return Ok();
         }
 

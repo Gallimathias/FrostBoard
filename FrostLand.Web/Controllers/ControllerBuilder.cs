@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FrostLand.Model;
-using FrostLand.Web.Generators;
+using NonSucking.Framework.Extension.IoC;
+//using FrostLand.Web.Generators;
 
 namespace FrostLand.Web.Controllers
 {
-    [ControllerGenerator]
+    //[ControllerGenerator]
     public static partial class ControllerBuilder
     {
-        static partial void BuildOf(Board board);
+        public static void Register(ITypeContainer typeContainer)
+        {
+            typeContainer.Register<AuthenticationController>();
+            typeContainer.Register<BoardController>();
+        }
+
+        //static partial void BuildOf(Board board);
     }
 }

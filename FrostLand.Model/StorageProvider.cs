@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FrostLand.Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -37,9 +38,35 @@ namespace FrostLand.Model
             return dbSet.Find(key);
         }
 
+        public Page<T> Get<T>(Paginator paginator, int index) where T : Entity 
+            => Get<T>(index, paginator.Size);
+        public Page<T> Get<T>(int index, int size) where T : Entity
+        {
+            var dbSet = database.Set<T>();
+            var startIndex = index * size;
+
+            return new(index, dbSet.Skip(startIndex).Take(size));
+        }
+
+        public Paginator GetPaginator<T>(int size) where T : Entity
+        {
+            var dbSet = database.Set<T>();
+            var count = dbSet.Count();
+
+            return new(count / size, size, count);
+        }
+
         public EntityState Remove<T>(T entity) where T : Entity
         {
             var dbSet = database.Set<T>();
+            var entry = dbSet.Remove(entity);
+            database.SaveChanges();
+            return entry.State;
+        }
+        public EntityState Remove<T,K>(K id) where T : Entity
+        {
+            var dbSet = database.Set<T>();
+            var entity = database.Find<T>(id);
             var entry = dbSet.Remove(entity);
             database.SaveChanges();
             return entry.State;

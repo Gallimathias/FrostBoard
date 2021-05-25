@@ -80,35 +80,10 @@ namespace {serializationNamespace}
                         [Route(""api/[controller]"")]
                         [ApiController]
                         [Authorize]
-                        public class {paramater.Type.Name}Controller : ControllerBase
+                        public class {paramater.Type.Name}Controller : EntityController<{paramater.Type.Name}, int>
                         {{
-                            private readonly StorageProvider storageProvider;
-
-                            public {paramater.Type.Name}Controller(StorageProvider storageProvider)
+                            public {paramater.Type.Name}Controller(StorageProvider storageProvider) : base(storageProvider)
                             {{
-                                    this.storageProvider = storageProvider;
-                            }}
-                            
-                            [HttpPost]
-                            public void AddOrUpdate({paramater.Type.Name} value)
-                            {{
-                                return storageProvider.AddOrUpdate(value);
-                            }}
-                            
-                            [HttpGet]
-                            public void Get()
-                            {{
-                                return storageProvider.Find(value);
-                            }}
-                            [HttpGet({{id}})]
-                            public void GetById(int id)
-                            {{
-                                return storageProvider.AddOrUpdate(value);
-                            }}
-                            [HttpDelete({{id}})]
-                            public void Remove(int id)
-                            {{
-                                return storageProvider.Remove(value);
                             }}
                         }}
                     }}
