@@ -1,5 +1,5 @@
 ﻿using FrostLand.Core;
-using FrostLand.Web.Model;
+using FrostLand.Core.Model;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace FrostLand.Web.Authentication
 
             if (!keyFile.Exists)
             {
-                if (!keyFile.Directory.Exists)
+                if (!keyFile.Directory!.Exists)
                     keyFile.Directory.Create();
 
                 GenerateNewKey(ref key, 0, key.Length);
@@ -57,13 +57,13 @@ namespace FrostLand.Web.Authentication
             Key = new SymmetricSecurityKey(key);
         }
 
-        public AuthResponse Login(string username, string password)
+        public AuthResponse Login(AuthRequest authentication)
         {
-            var result = sessionService.Login(username, password);
-            var token = Create(username, true, result);
+            var result = sessionService.Login(authentication.Username, authentication.Password);
+            var token = Create(result);
             return new()
             {
-                Session = result,
+                Session = result.SessionId,
                 Token = token.Token,
                 ExpireDate = token.ExpireDate
             };
@@ -71,10 +71,10 @@ namespace FrostLand.Web.Authentication
         public AuthResponse GuestLogin()
         {
             var result = sessionService.GuestSession();
-            var token = Create("GUEST", false, result);
+            var token = Create(result);
             return new()
             {
-                Session = result,
+                Session = result.SessionId,
                 Token = token.Token,
                 ExpireDate = token.ExpireDate
             };
@@ -83,24 +83,25 @@ namespace FrostLand.Web.Authentication
         public AuthResponse Refresh()
         {
             var result = sessionService.GuestSession();
-            var token = Create("GUEST", false, result);
+            var token = Create(result);
             return new()
             {
-                Session = result,
+                Session = result.SessionId,
                 Token = token.Token,
                 ExpireDate = token.ExpireDate
             };
         }
 
-        public AuthToken Create(string username, bool isRegisterd, Guid session)
+        public AuthToken Create(SessionContext context)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                             {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim("session", session.ToString()),
-                    new Claim("registered", isRegisterd.ToString())
+                                new Claim(ClaimTypes.Name, context.Username),
+                                new Claim(ClaimTypes.Sid, context.UserId.ToString()),
+                                new Claim("session", context.SessionId.ToString()),
+                                new Claim("registered", context.IsRegistered.ToString())
                             }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha512Signature),
@@ -127,8 +128,25 @@ namespace FrostLand.Web.Authentication
                 out SecurityToken validatedToken)
         {
             var principal = tokenHandler.ValidateToken(securityToken, validationParameters, out validatedToken);
-
+            var context = GetContextFrom(principal);
+            sessionService.Validate(context);
             return principal;
+        }
+
+        public SessionContext GetContextFrom(ClaimsPrincipal principal)
+        {
+            var username = principal.FindFirstValue(ClaimTypes.Name);
+            var userId = principal.FindFirstValue(ClaimTypes.Sid);
+            var session = principal.FindFirstValue("session");
+            var registered = principal.FindFirstValue("registered");
+
+            return new SessionContext
+            (
+                username: username,
+                userId: int.Parse(userId),
+                sessionId: Guid.Parse(session),
+                isRegistered: bool.Parse(registered)
+            );
         }
     }
 }

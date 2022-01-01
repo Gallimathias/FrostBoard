@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FrostLand.Core.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,9 @@ namespace FrostLand.Core
 {
     public interface ISessionTokenProvider
     {
-        AuthToken Create(string username, bool isRegisterd, Guid session);
+        AuthToken Create(SessionContext context);
+        AuthResponse GuestLogin();
+        AuthResponse Login(AuthRequest authentication);
+        AuthResponse Refresh();
     }
 }

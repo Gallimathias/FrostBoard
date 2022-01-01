@@ -1,11 +1,12 @@
 ﻿using FrostLand.Core;
-using FrostLand.Web.Model;
+using FrostLand.Core.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NonSucking.Framework.Extension.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FrostLand.Web.Controllers
@@ -13,13 +14,16 @@ namespace FrostLand.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : ControllerBase, IDisposable
     {
-        private readonly IUserSessionService userSessionService;
+        private readonly ISessionTokenProvider sessionTokenProvider;
+        private readonly ManualResetEvent resetEvent;
 
-        public AuthenticationController(IUserSessionService userSessionService)
+        public AuthenticationController(ISessionTokenProvider sessionTokenProvider)
         {
-            this.userSessionService = userSessionService;
+            this.sessionTokenProvider = sessionTokenProvider;
+
+            resetEvent = new ManualResetEvent(false);
         }
 
         [Route("[action]")]
@@ -31,30 +35,30 @@ namespace FrostLand.Web.Controllers
         [Route("[action]")]
         [HttpGet]
         public AuthResponse Refresh()
-            => Ok();
+            => sessionTokenProvider.Refresh();
 
         [Route("login/user")]
         [HttpPost]
         [AllowAnonymous]
-        public AuthResponse LoginUser([FromBody] AuthRequest authentication)
-        {
-            userSessionService.Login(authentication.Username, authentication.Password);
-            return Ok();
-        }
+        public AuthResponse LoginUser([FromBody] AuthRequest authentication) 
+            => sessionTokenProvider.Login(authentication);
 
         [Route("login/guest")]
         [HttpGet]
         [AllowAnonymous]
-        public AuthResponse LoginGuest()
-        {
-            userSessionService.GuestSession();
-            return Ok();
-        }
+        public AuthResponse LoginGuest() 
+            => sessionTokenProvider.GuestLogin();
 
         [Route("[action]")]
         [HttpGet]
         [AllowAnonymous]
         public ActionResult NewGuid()
             => Ok(Guid.NewGuid().ToString("N"));
+
+        public void Dispose()
+        {
+            resetEvent.Dispose();
+        }
+
     }
 }

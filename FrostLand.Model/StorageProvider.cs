@@ -67,6 +67,10 @@ namespace FrostLand.Model
         {
             var dbSet = database.Set<T>();
             var entity = database.Find<T>(id);
+
+            if (entity is null)
+                return EntityState.Detached;
+
             var entry = dbSet.Remove(entity);
             database.SaveChanges();
             return entry.State;

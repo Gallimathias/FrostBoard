@@ -29,7 +29,7 @@ namespace FrostLand.Model
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var list = serializer.Deserialize<List<Dictionary<string, object>>>(reader);
+            var list = serializer.Deserialize<List<Dictionary<string, object>>>(reader)!;
             
             Type itemType = null;
 
@@ -52,7 +52,7 @@ namespace FrostLand.Model
             foreach (var itemDictionary in list)
             {
                 if (itemType == null)
-                    itemType = Type.GetType((string)itemDictionary["type"]);
+                    itemType = Type.GetType((string)itemDictionary["type"])!;
 
                 if (props == null)
                     props = itemType.GetProperties().ToDictionary(k => k.Name);
@@ -71,7 +71,7 @@ namespace FrostLand.Model
                     info.SetValue(item, value);
                 }
 
-                existingValue.GetType().GetRuntimeMethod("Add", new[] { itemType }).Invoke(existingValue, new[] { item });
+                existingValue!.GetType().GetRuntimeMethod("Add", new[] { itemType })?.Invoke(existingValue, new[] { item });
             }
 
             return existingValue;
