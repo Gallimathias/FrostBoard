@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using NonSucking.Framework.Extension.IoC;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace FrostLand.Web
 {
@@ -92,6 +94,7 @@ namespace FrostLand.Web
             }
 
             app.UseHttpsRedirection();
+                       
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -99,6 +102,21 @@ namespace FrostLand.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //HACK: Only for Closed BETA builds
+            //app.Use((context, next) =>
+            //{
+            //    if (context.Request.Headers.TryGetValue("closed-beta", out var betaKey))
+            //    {
+            //        return next();
+            //    }
+            //    else
+            //    {
+            //        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            //        return Task.CompletedTask;
+            //    }
+
+            //});
 
             app.UseEndpoints(endpoints =>
             {

@@ -8,8 +8,6 @@ namespace FrostLand.SqlLite
 {
     public class FrostLandSqlLiteDatabase : FrostlandDatabase
     {
-        static FrostLandSqlLiteDatabase() => SQLitePCL.Batteries.Init();
-
         public FrostLandSqlLiteDatabase(DbContextOptions options) : base(options)
         {
             

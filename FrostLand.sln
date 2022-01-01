@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31025.218
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrostLand.Model", "FrostLand.Model\FrostLand.Model.csproj", "{D6023452-E39A-4414-ABF2-9612B1F44825}"
 EndProject
@@ -12,14 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrostLand.Web", "FrostLand.Web\FrostLand.Web.csproj", "{80BFDF3A-7099-48A9-AE85-19BE7603DB7A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrostLand.Runtime", "FrostLand.Runtime\FrostLand.Runtime.csproj", "{3CD100A5-F04F-4283-B6A1-B302CE6E9160}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrostLand.Runtime.Generators", "FrostLand.Runtime.Generators\FrostLand.Runtime.Generators.csproj", "{BDA1253E-955E-414C-AECD-874598ED7558}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrostLand.Model.Generators", "FrostLand.Model.Generators\FrostLand.Model.Generators.csproj", "{4FA30AB2-B05F-4CC6-88F0-91276FFF1846}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrostLand.Generator.Tests", "FrostLand.Generator.Tests\FrostLand.Generator.Tests.csproj", "{5776ADCE-FD3B-4D5D-BBF8-3823447A53B9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrostLand.Web.Generators", "FrostLand.Web.Generators\FrostLand.Web.Generators.csproj", "{0807CB10-4BEE-4EB0-BFDF-20BE5D664F7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,22 +39,6 @@ Global
 		{3CD100A5-F04F-4283-B6A1-B302CE6E9160}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CD100A5-F04F-4283-B6A1-B302CE6E9160}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CD100A5-F04F-4283-B6A1-B302CE6E9160}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BDA1253E-955E-414C-AECD-874598ED7558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BDA1253E-955E-414C-AECD-874598ED7558}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BDA1253E-955E-414C-AECD-874598ED7558}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BDA1253E-955E-414C-AECD-874598ED7558}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4FA30AB2-B05F-4CC6-88F0-91276FFF1846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FA30AB2-B05F-4CC6-88F0-91276FFF1846}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4FA30AB2-B05F-4CC6-88F0-91276FFF1846}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FA30AB2-B05F-4CC6-88F0-91276FFF1846}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5776ADCE-FD3B-4D5D-BBF8-3823447A53B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5776ADCE-FD3B-4D5D-BBF8-3823447A53B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5776ADCE-FD3B-4D5D-BBF8-3823447A53B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5776ADCE-FD3B-4D5D-BBF8-3823447A53B9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0807CB10-4BEE-4EB0-BFDF-20BE5D664F7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0807CB10-4BEE-4EB0-BFDF-20BE5D664F7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0807CB10-4BEE-4EB0-BFDF-20BE5D664F7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0807CB10-4BEE-4EB0-BFDF-20BE5D664F7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

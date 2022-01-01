@@ -1,14 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<PlatformTarget>x64</PlatformTarget>
+		<Nullable>warnings</Nullable>
+		<WarningsAsErrors>Nullable</WarningsAsErrors>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NonSucking.Framework.Extension" Version="1.0.0-alpha.45-fa2fc8d" />
-    <PackageReference Include="NonSucking.Framework.Extension.Rx" Version="1.0.0-alpha.45-fa2fc8d" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="NonSucking.Framework.Extension" Version="1.0.0-alpha.45-fa2fc8d" />
+		<PackageReference Include="NonSucking.Framework.Extension.Rx" Version="1.0.0-alpha.45-fa2fc8d" />
+		<PackageReference Include="System.Reactive" Version="5.0.0" />
+	</ItemGroup>
 
 </Project>
