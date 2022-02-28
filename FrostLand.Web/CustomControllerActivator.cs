@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FrostLand.Model;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using NonSucking.Framework.Extension.IoC;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 
 namespace FrostLand.Web
@@ -32,7 +34,7 @@ namespace FrostLand.Web
         public object Create(ControllerContext context)
         {
             var type = context.ActionDescriptor.ControllerTypeInfo.AsType();
-            object controller = null;
+            object? controller = null;
 
             if (controllers.TryGetValue(type, out var pool))
             {
@@ -40,8 +42,8 @@ namespace FrostLand.Web
                     controller = obj.Controller;
             }
 
-            if (controller == null)
-                controller = typeContainer.GetOrNull(type) ?? Activator.CreateInstance(type);
+            if (controller is null)
+                controller = typeContainer.GetOrNull(type) ?? Activator.CreateInstance(type)!;
 
             if (controller is ControllerBase @base)
                 @base.ControllerContext = context;
@@ -64,27 +66,20 @@ namespace FrostLand.Web
 
             if (controllers.TryGetValue(type, out var pool))
             {
-                pool.Enqueue(new PoolEntry(controller, DateTime.Now));
+                pool.Enqueue(new PoolEntry(controller, 0));
             }
             else
             {
                 var p = new ConcurrentQueue<PoolEntry>();
                 if (controllers.TryAdd(type, p))
                 {
-                    p.Enqueue(new PoolEntry(controller, DateTime.Now));
+                    p.Enqueue(new PoolEntry(controller, 0));
                 }
             }
         }
 
-        private readonly struct PoolEntry
+        private record struct PoolEntry(object Controller, int Generation)
         {
-            public readonly object Controller { get; }
-            public readonly DateTime LastUsed { get; }
-            public PoolEntry(object controller, DateTime lastUsed)
-            {
-                Controller = controller;
-                LastUsed = lastUsed;
-            }
         }
     }
 }

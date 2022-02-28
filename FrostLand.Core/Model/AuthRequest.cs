@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace FrostLand.Core.Model
 {
-    public sealed class AuthRequest
+    public record struct AuthRequest([Required] string Username, [Required] string Password)
     {
-        [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
     }
 }

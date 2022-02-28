@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrostLand.Web", "FrostLand.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrostLand.Runtime", "FrostLand.Runtime\FrostLand.Runtime.csproj", "{3CD100A5-F04F-4283-B6A1-B302CE6E9160}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{60CFA5D1-2DED-4B95-A531-43135281F353}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrostLand.Model.Tests", "UnitTests\FrostLand.Model.Tests\FrostLand.Model.Tests.csproj", "{1782A91E-9B22-4E99-9EA9-B463DF777862}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +43,16 @@ Global
 		{3CD100A5-F04F-4283-B6A1-B302CE6E9160}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CD100A5-F04F-4283-B6A1-B302CE6E9160}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CD100A5-F04F-4283-B6A1-B302CE6E9160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1782A91E-9B22-4E99-9EA9-B463DF777862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1782A91E-9B22-4E99-9EA9-B463DF777862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1782A91E-9B22-4E99-9EA9-B463DF777862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1782A91E-9B22-4E99-9EA9-B463DF777862}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1782A91E-9B22-4E99-9EA9-B463DF777862} = {60CFA5D1-2DED-4B95-A531-43135281F353}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F9EA2F6-617C-4658-A03F-E033F46CB678}

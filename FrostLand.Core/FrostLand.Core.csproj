@@ -2,8 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
+		<EnablePreviewFeatures>True</EnablePreviewFeatures>
 		<PlatformTarget>x64</PlatformTarget>
-		<Nullable>warnings</Nullable>
+		<Nullable>enable</Nullable>
 		<WarningsAsErrors>Nullable</WarningsAsErrors>
 	</PropertyGroup>
 

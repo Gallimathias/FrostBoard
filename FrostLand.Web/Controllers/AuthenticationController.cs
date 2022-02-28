@@ -43,6 +43,12 @@ namespace FrostLand.Web.Controllers
         public AuthResponse LoginUser([FromBody] AuthRequest authentication) 
             => sessionTokenProvider.Login(authentication);
 
+        [Route("[action]")]
+        [HttpPost]
+        [AllowAnonymous]
+        public AuthResponse Register([FromBody] AuthRequest authentication)
+            => sessionTokenProvider.Register(authentication);
+
         [Route("login/guest")]
         [HttpGet]
         [AllowAnonymous]

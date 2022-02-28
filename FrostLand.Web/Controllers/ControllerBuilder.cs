@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FrostLand.Model;
+﻿using FrostLand.Core;
 using NonSucking.Framework.Extension.IoC;
-//using FrostLand.Web.Generators;
 
 namespace FrostLand.Web.Controllers
 {
-    //[ControllerGenerator]
-    public static partial class ControllerBuilder
+    public partial class ControllerBuilder : IStartUp
     {
         public static void Register(ITypeContainer typeContainer)
         {
@@ -17,6 +11,5 @@ namespace FrostLand.Web.Controllers
             typeContainer.Register<BoardController>();
         }
 
-        //static partial void BuildOf(Board board);
     }
 }

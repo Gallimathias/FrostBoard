@@ -12,6 +12,7 @@ namespace FrostLand.Core
         SessionContext GuestSession();
         SessionContext Login(string username, string password);
         SessionContext Refresh(SessionContext context);
+        SessionContext Register(string username, string password);
         void Validate(SessionContext context);
     }
 }

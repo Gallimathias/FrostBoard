@@ -11,7 +11,8 @@ namespace FrostLand.Model
     public abstract class IndexdEntity<T> : Entity
     {
         [Key]
+        [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public T Id { get; set; }
+        public T? Id { get; set; }
     }
 }

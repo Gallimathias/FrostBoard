@@ -1,15 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
-	  <PlatformTarget>x64</PlatformTarget>
-	  <Nullable>warnings</Nullable>
-	  <WarningsAsErrors>Nullable</WarningsAsErrors>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<EnablePreviewFeatures>True</EnablePreviewFeatures>
+		<PlatformTarget>x64</PlatformTarget>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>Nullable</WarningsAsErrors>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FrostLand.Core\FrostLand.Core.csproj" />
-    <ProjectReference Include="..\FrostLand.Model\FrostLand.Model.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FrostLand.Core\FrostLand.Core.csproj" />
+		<ProjectReference Include="..\FrostLand.Model\FrostLand.Model.csproj" />
+		<ProjectReference Include="..\FrostLand.SqlLite\FrostLand.SqlLite.csproj" />
+	</ItemGroup>
 
 </Project>

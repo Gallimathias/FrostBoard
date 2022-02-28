@@ -259,3 +259,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/FrostLand.Web/main.db
+/FrostLand.Web/main.db-shm
+/FrostLand.Web/main.db-wal
+/FrostLand.Web/jwt/issuer.key

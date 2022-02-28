@@ -13,5 +13,6 @@ namespace FrostLand.Core
         AuthResponse GuestLogin();
         AuthResponse Login(AuthRequest authentication);
         AuthResponse Refresh();
+        AuthResponse Register(AuthRequest authentication);
     }
 }

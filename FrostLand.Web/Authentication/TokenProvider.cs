@@ -14,7 +14,7 @@ namespace FrostLand.Web.Authentication
 {
     public sealed class TokenProvider : ISecurityTokenValidator, ISessionTokenProvider
     {
-        public SymmetricSecurityKey Key { get; private set; }
+        public SymmetricSecurityKey? Key { get; private set; }
         public string Issuer { get; }
 
         private readonly IUserSessionService sessionService;
@@ -55,6 +55,18 @@ namespace FrostLand.Web.Authentication
             }
 
             Key = new SymmetricSecurityKey(key);
+        }
+
+        public AuthResponse Register(AuthRequest authentication)
+        {
+            var result = sessionService.Register(authentication.Username, authentication.Password);
+            var token = Create(result);
+            return new()
+            {
+                Session = result.SessionId,
+                Token = token.Token,
+                ExpireDate = token.ExpireDate
+            };
         }
 
         public AuthResponse Login(AuthRequest authentication)
@@ -142,10 +154,10 @@ namespace FrostLand.Web.Authentication
 
             return new SessionContext
             (
-                username: username,
-                userId: int.Parse(userId),
-                sessionId: Guid.Parse(session),
-                isRegistered: bool.Parse(registered)
+                Username: username,
+                UserId: int.Parse(userId),
+                SessionId: Guid.Parse(session),
+                IsRegistered: bool.Parse(registered)
             );
         }
     }

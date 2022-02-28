@@ -5,10 +5,7 @@ using System.Threading.Tasks;
 
 namespace FrostLand.Core.Model
 {
-    public sealed class AuthResponse
+    public record struct AuthResponse(Guid Session, string Token, DateTimeOffset ExpireDate)
     {
-        public Guid Session { get; set; }
-        public string Token { get; set; }
-        public DateTimeOffset ExpireDate { get; set; }
     }
 }

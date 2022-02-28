@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,102 +11,69 @@ namespace FrostLand.Model
 {
     public class RefListConverter : JsonConverter
     {
-        private readonly Type collectionType;
-
-        public RefListConverter()
-        {
-
-        }
-        public RefListConverter(Type collectionType)
-        {
-            this.collectionType = collectionType;
-        }
-
         public override bool CanConvert(Type objectType)
         {
-            return typeof(ICollection).IsAssignableFrom(objectType) &&
-                objectType.GetProperties().Where(p => p.GetCustomAttributes<KeyAttribute>().Any()).Any();
+            return typeof(ICollection).IsAssignableFrom(objectType)
+                && objectType.IsGenericType
+                && objectType
+                    .GetGenericArguments()[0]
+                    .GetProperties()
+                    .Any(p => p.GetCustomAttributes<KeyAttribute>().Any());
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            var list = serializer.Deserialize<List<Dictionary<string, object>>>(reader)!;
-            
-            Type itemType = null;
-
-            if (existingValue == null)
-            {
-                var type = collectionType ?? objectType;
-
-                if (type.IsInterface || type.IsAbstract)
-                    existingValue = new List<object>();
-                else
-                    existingValue = Activator.CreateInstance(type);
-
-                if (type.GenericTypeArguments.Length > 0)
-                    itemType = type.GenericTypeArguments[0];
-
-            }
-
-            Dictionary<string, PropertyInfo> props = null;
-
-            foreach (var itemDictionary in list)
-            {
-                if (itemType == null)
-                    itemType = Type.GetType((string)itemDictionary["type"])!;
-
-                if (props == null)
-                    props = itemType.GetProperties().ToDictionary(k => k.Name);
-
-                object item = Activator.CreateInstance(itemType);
-                foreach (var prop in itemDictionary)
-                {
-                    var info = props[prop.Key];
-                    var value = prop.Value;
-
-                    if (info.PropertyType == typeof(int))
-                        value = Convert.ToInt32(prop.Value);
-                    else if (info.PropertyType == typeof(short))
-                        value = Convert.ToInt16(prop.Value);                        
-
-                    info.SetValue(item, value);
-                }
-
-                existingValue!.GetType().GetRuntimeMethod("Add", new[] { itemType })?.Invoke(existingValue, new[] { item });
-            }
-
-            return existingValue;
+            return serializer.Deserialize(reader, objectType);
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            var collection = (IEnumerable)value;
-            var list = new List<object>();
+            var collectionType = value?.GetType() ?? typeof(object);
 
-            PropertyInfo[] keys = null;
+            if (value is not ICollection collection
+                || !collectionType.IsGenericType)
+            {
+                serializer.Serialize(writer, value);
+                return;
+            }
+
+            var genericArguments = collectionType.GetGenericArguments()!;
+
+            if(genericArguments.Length < 1)
+            {
+                serializer.Serialize(writer, value);
+                return;
+            }
+
+            var itemType = genericArguments[0];
+
+            PropertyInfo[] keys
+                        = itemType
+                        .GetProperties()
+                        .Select(p => new { Property = p, Attribute = p.GetCustomAttribute<KeyAttribute>() })
+                        .Where(p => p.Attribute != null)
+                        .Select(p => p.Property)
+                        .ToArray();
+
+            var array = new JArray();
 
             foreach (var item in collection)
             {
-                var tmpDic = new Dictionary<string, object>();
-
-                if (keys == null)
-                {
-                    keys = item.GetType()
-                               .GetProperties()
-                               .Select(p => new { Property = p, Attribute = p.GetCustomAttribute<KeyAttribute>() })
-                               .Where(p => p.Attribute != null)
-                               .Select(p => p.Property).ToArray();
-                }
+                var jObject = new JObject();
 
                 foreach (var key in keys)
                 {
-                    tmpDic.Add(key.Name, key.GetValue(item));
+                    var keyValue = key.GetValue(item);
+
+                    var tokenValue = keyValue is not null ? JToken.FromObject(keyValue) : null;
+
+                    jObject.Add(key.Name, tokenValue);
                 }
 
-                list.Add(tmpDic);
+                array.Add(jObject);
             }
 
-            serializer.Serialize(writer, list);
+            array.WriteTo(writer);
         }
     }
 }

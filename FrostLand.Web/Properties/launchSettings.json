@@ -8,16 +8,8 @@
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "FrostLand.Web": {
       "commandName": "Project",
-      "workingDirectory": "D:\\Projekte\\Visual 2019\\FrostBoard\\FrostLand.Web\\bin\\Debug\\net5.0",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

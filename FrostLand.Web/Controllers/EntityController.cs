@@ -1,12 +1,15 @@
 ﻿using FrostLand.Core;
 using FrostLand.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace FrostLand.Web.Controllers
 {
-    public abstract class EntityController<TEntity, TKey> : ControllerBase where TEntity : Entity
+    [ApiController]
+    [Authorize]
+    public class EntityController<TEntity, TKey, TApiKey> : ControllerBase where TEntity : Entity
     {
         private readonly StorageProvider storageProvider;
 
@@ -16,7 +19,7 @@ namespace FrostLand.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddOrUpdate(TEntity value) 
+        public IActionResult AddOrUpdate(TEntity value)
         {
             var state = storageProvider.AddOrUpdate(value);
 
@@ -30,18 +33,25 @@ namespace FrostLand.Web.Controllers
         public Page<TEntity> Get([FromQuery] int index = 0, [FromQuery] int size = 10)
             => storageProvider.Get<TEntity>(index, size);
 
-        [HttpGet("{id:int}")]
-        public TEntity Get(TKey id)
-            => storageProvider.Find<TEntity, TKey>(id);
+        [HttpGet("{id}")]
+        public IActionResult Get(TApiKey id)
+        {
+            var value = storageProvider.Find<TEntity, TKey>(GenericCaster<TApiKey, TKey>.Cast(id));
+
+            if (value is null)
+                return StatusCode((int)HttpStatusCode.NotFound);
+
+            return Ok(value);
+        }
 
         [HttpGet("[action]")]
         public Paginator Paginate([FromQuery] int size = 10)
             => storageProvider.GetPaginator<TEntity>(size);
 
-        [HttpDelete("{id:int}")]
-        public IActionResult Remove(TKey id)
+        [HttpDelete("{id}")]
+        public IActionResult Remove(TApiKey id)
         {
-            var state = storageProvider.Remove<TEntity, TKey>(id);
+            var state = storageProvider.Remove<TEntity, TKey>(GenericCaster<TApiKey, TKey>.Cast(id));
 
             return
                 state == EntityState.Deleted

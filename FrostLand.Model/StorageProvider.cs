@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
+using NonSucking.Framework.Extension.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,17 @@ namespace FrostLand.Model
 {
     public class StorageProvider
     {
-        private readonly DbContext database;
+        private readonly ITypeContainer typeContainer;
 
-        public StorageProvider()
+        public StorageProvider(ITypeContainer typeContainer)
         {
-            database = default;
+            this.typeContainer = typeContainer;
         }
 
         public EntityState AddOrUpdate<T>(T entity) where T : Entity
         {
+            using var database = GetDbContext();
+
             var dbSet = database.Set<T>();
             EntityEntry<T> entry;
             if (dbSet.Contains(entity))
@@ -32,16 +35,36 @@ namespace FrostLand.Model
             return entry.State;
         }
 
-        public T Find<T, K>(K key) where T : Entity
+        public T? Find<T, K>(K key) where T : Entity
         {
+            using var database = GetDbContext();
+
             var dbSet = database.Set<T>();
             return dbSet.Find(key);
+        }
+
+        public T First<T>(Func<T, bool> predicate) where T : Entity
+        {
+            using var database = GetDbContext();
+
+            var dbSet = database.Set<T>();
+            return dbSet.First(predicate);
+        }
+
+        public T? FirstOrDefault<T>(Func<T, bool> predicate) where T : Entity
+        {
+            using var database = GetDbContext();
+
+            var dbSet = database.Set<T>();
+            return dbSet.FirstOrDefault(predicate);
         }
 
         public Page<T> Get<T>(Paginator paginator, int index) where T : Entity 
             => Get<T>(index, paginator.Size);
         public Page<T> Get<T>(int index, int size) where T : Entity
         {
+            using var database = GetDbContext();
+
             var dbSet = database.Set<T>();
             var startIndex = index * size;
 
@@ -50,6 +73,8 @@ namespace FrostLand.Model
 
         public Paginator GetPaginator<T>(int size) where T : Entity
         {
+            using var database = GetDbContext();
+
             var dbSet = database.Set<T>();
             var count = dbSet.Count();
 
@@ -58,6 +83,8 @@ namespace FrostLand.Model
 
         public EntityState Remove<T>(T entity) where T : Entity
         {
+            using var database = GetDbContext();
+
             var dbSet = database.Set<T>();
             var entry = dbSet.Remove(entity);
             database.SaveChanges();
@@ -65,6 +92,8 @@ namespace FrostLand.Model
         }
         public EntityState Remove<T,K>(K id) where T : Entity
         {
+            using var database = GetDbContext();
+
             var dbSet = database.Set<T>();
             var entity = database.Find<T>(id);
 
@@ -74,6 +103,13 @@ namespace FrostLand.Model
             var entry = dbSet.Remove(entity);
             database.SaveChanges();
             return entry.State;
+        }
+
+        private FrostLandDbContext GetDbContext()
+        {
+            var dbContext = typeContainer.Get<FrostLandDbContext>();
+            dbContext.Database.EnsureCreated();
+            return dbContext;
         }
     }
 }
